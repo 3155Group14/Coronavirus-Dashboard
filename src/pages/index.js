@@ -6,6 +6,8 @@ import Layout from 'components/Layout';
 import Container from 'components/Container';
 import Map from 'components/Map';
 import Snippet from 'components/Snippet';
+import axios from 'axios';
+
 
 const LOCATION = {
   lat: 38.9072,
@@ -22,6 +24,18 @@ const IndexPage = () => {
    */
 
   async function mapEffect({ leafletElement: map } = {}) {
+   let response;
+
+      try {
+        response = await axios.get('https://disease.sh/v3/covid-19/states');
+      } catch(e) {
+        console.log(`Failed to fetch states: ${e.message}`, e);
+        return;
+      }
+
+      const { data = [] } = response;
+      console.log("Printing requested state data!");
+      console.log(data);
   }
 
   const mapSettings = {
