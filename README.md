@@ -1,6 +1,6 @@
 # Coronavirus-Dashboard
 Coronavirus-Dashboard is a project being developed in a Software Engineering course.
-We are using a gatsby starter kit to create map visualization of the disease statistics: https://github.com/colbyfayock/gatsby-starter-leaflet
+We are using a gatsby starter kit to create map visualization of the disease statistics and the coresponding tutorial: https://github.com/colbyfayock/gatsby-starter-leaflet
 
 # Install:
 1. Install [Yarn](https://classic.yarnpkg.com/en/).
