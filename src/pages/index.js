@@ -1,9 +1,9 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import Layout from 'components/Layout';
-import Container from 'components/Container';
 import Map from 'components/Map';
 import axios from 'axios';
+import L from 'leaflet';
 
 const IndexPage = () => {
 
@@ -24,7 +24,6 @@ const IndexPage = () => {
 
 	// Cleanse some of our input we don't want
 	data.splice(51,62)
-	
 	
 	// Print the data we just obtained
 	console.log("Printing data from API response");
@@ -73,11 +72,70 @@ const IndexPage = () => {
 	// Print the geoJson objects we just created
 	console.log("Printing geoJson");
 	console.log(geoJson);
+	
+	// Create new geoJson Layer
+	const geoJsonLayers = new L.GeoJSON(geoJson, {
+	pointToLayer: (feature = {}, latlng) => {
+    const { properties = {} } = feature;
+    let updatedFormatted;
+	let abreviated
+
+	// Set up the formatting for our HTML
+    const {
+	  active,
+      cases,
+      casesPerOneMillion,
+      deaths,
+      deathsPerOneMillion,
+      population,
+	  recovered,
+	  tests,
+	  testsPerOneMillion,
+	  updated,
+	  state
+    } = properties
+    
+	abreviated = state.match(/[A-Z]/g).join('.');
+	
+	updatedFormatted = new Date(updated).toLocaleString();
+
+	// Actual HTML
+    const html = `
+      <span class="icon-marker">
+        <span class="icon-marker-tooltip">
+          <h2>${state}</h2>
+          <ul>
+            <li><strong>Active:</strong> ${active}</li>
+            <li><strong>Cases:</strong> ${cases}</li>
+            <li><strong>Cases Per One Million:</strong> ${casesPerOneMillion}</li>
+            <li><strong>Deaths:</strong> ${deaths}</li>
+			<li><strong>Death Per One Million:</strong> ${deathsPerOneMillion}</li>
+			<li><strong>Population:</strong> ${population}</li>
+			<li><strong>Recovered:</strong> ${recovered}</li>
+			<li><strong>Tests:</strong> ${tests}</li>
+			<li><strong>Tests Per One Million:</strong> ${testsPerOneMillion}</li>
+			<li><strong>Last updated:</strong> ${updatedFormatted}</li>
+          </ul>
+        </span>
+        ${ abreviated }
+      </span>
+    `;
+
+    return L.marker( latlng, {
+      icon: L.divIcon({className: 'icon', html}),
+      riseOnHover: true
+    });
+  }
+});
+	
+	// Add our prepared geoJson to the map!
+	geoJsonLayers.addTo(map)
+
   }
 
   const mapSettings = {
-    center: [50, 0],
-    zoom: 2,
+    center: [45, -95],
+    zoom: 4,
     mapEffect,
   };
 
@@ -88,10 +146,6 @@ const IndexPage = () => {
       </Helmet>
       <Map  {...mapSettings}>
       </Map>
-      <Container type="content" className="text-center home-start">
-        <h2>Coronavirus-Dashboard</h2>
-        <p>ITSC-3155 Group 14</p>
-      </Container>
     </Layout>
   );
 };
