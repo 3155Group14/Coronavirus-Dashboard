@@ -72,3 +72,7 @@ tests/videos
 #dependencies
 node_modules
 
+.vs/Coronavirus-Dashboard/v16/.suo
+.vs/ProjectSettings.json
+.vs/slnx.sqlite
+.vs/VSWorkspaceState.json
